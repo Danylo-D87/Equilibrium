@@ -86,8 +86,8 @@ graph TD
 1. **Clone the repository**
 
 ```bash
-git clone https://github.com/your-username/equilibrium-api.git
-cd equilibrium-api
+git clone https://github.com/Danylo-D87/Equilibrium
+cd Equilibrium
 ```
 
 2. **Configure Environment**
@@ -141,3 +141,4 @@ This project was created for personal use. Future development will continue priv
 ## License
 
 MIT
+
