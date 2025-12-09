@@ -1,0 +1,91 @@
+version: '3.8'
+
+services:
+  # === SERVICE 1: DATABASE ===
+  db:
+    image: postgres:15-alpine
+    container_name: quant_db
+    restart: always
+    # Read passwords from .env file
+    env_file:
+      - .env
+    # Map ports: (Host Port : Container Port)
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    # Volumes (Persistence)
+    volumes:
+      # 1. Persist actual data (survives container restarts)
+      - postgres_data:/var/lib/postgresql/data
+      # 2. Magic: load init.sql into Postgres startup directory
+      - ./docker/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  # === SERVICE 2: REDIS (Cache) ===
+  redis:
+    image: redis:7-alpine
+    container_name: quant_redis
+    restart: always
+    # Map port to access Redis from host (e.g., via Redis Desktop Manager)
+    ports:
+      - "${REDIS_PORT}:6379"
+    # Persist data to disk
+    volumes:
+      - redis_data:/data
+
+  # === SERVICE 3: BACKEND ===
+  backend:
+    # "Build container using Dockerfile in current directory (.)"
+    build: .
+    container_name: quant_backend
+    restart: always
+    # Connect host port 8000 to container port 8000
+    ports:
+      - "8000:8000"
+    # Dependency check: "Don't start until DB and Redis are up"
+    depends_on:
+      - db
+      - redis
+    env_file:
+      - .env
+    # Pass environment variables into Python container
+    environment:
+      # Note: DB Host is now 'db' (service name defined above), not localhost
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+      REDIS_HOST: redis
+    # Development magic: Mount source code into container.
+    # Changes in PyCharm reflect immediately in the container.
+    volumes:
+      - .:/app
+
+  # === SERVICE 4: FRONTEND ===
+  frontend:
+    # Build from the frontend directory
+    build: ./frontend
+    container_name: quant_frontend
+    restart: always
+    # Map port 3000
+    ports:
+      - "3000:3000"
+    # Mount code for Hot Reload
+    volumes:
+      - ./frontend:/app
+      # Important: prevent Docker from overwriting container's node_modules with host's version
+      - /app/node_modules
+    # Environment variables
+    environment:
+      # Important: Client browser accesses backend via localhost (client-side request)
+      - NEXT_PUBLIC_API_URL=http://localhost:8000
+
+  # === SERVICE 5: ADMINER (Database GUI) ===
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - "8080:8080"
+
+# Declare storage volumes
+volumes:
+  postgres_data:
+  redis_data:

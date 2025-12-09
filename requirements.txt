@@ -1,0 +1,28 @@
+# --- Web Server & API ---
+fastapi>=0.110.0
+uvicorn[standard]>=0.27.1
+requests>=2.31.0
+python-multipart>=0.0.9
+apscheduler>=3.10.4
+
+# --- Database & ORM ---
+sqlalchemy>=2.0.27
+asyncpg>=0.29.0
+alembic>=1.13.1
+
+# --- Caching (Redis) ---
+redis>=5.0.1
+
+# --- Configuration ---
+pydantic>=2.6.1
+pydantic-settings>=2.2.1
+python-dotenv>=1.0.1
+
+# --- Data Science & Trading ---
+pandas>=2.2.0
+numpy>=1.26.4
+# CCXT оновлюється дуже часто (майже щодня), тому ставимо свіжу версію
+ccxt>=4.2.19
+
+# --- Visualization (Frontend) ---
+# Потрібен для рендерингу HTML шаблонів у FastAPI

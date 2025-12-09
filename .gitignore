@@ -1,0 +1,52 @@
+# === Python & Backend ===
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Virtual Environments
+.venv/
+venv/
+env/
+
+# === Environment Variables (SECRETS) ===
+# Ігноруємо реальні ключі, але залишаємо шаблон .env_simple
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# === Frontend (Next.js/React) ===
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+frontend/build/
+frontend/dist/
+frontend/.vercel/
+node_modules/
+
+# Debug logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# === IDE & OS System Files ===
+.idea/
+.vscode/
+*.swp
+.DS_Store
+Thumbs.db
+
+# === Docker & Database Data ===
+# Щоб не пушити гігабайти бази даних
+postgres_data/
+redis_data/
+
+# === Other ===
+# Якщо випадково створились бекапи
+*.bak
+*.tmp
